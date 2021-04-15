@@ -10,9 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @State private var checkAmount = ""
     @State private var numberOfPeople = ""
-    @State private var tipPercentage = 2
+    @State private var tipPercentage = 1
+    @State private var currency = 0
 
     let tips = [5, 10, 15, 20, 0]
+    let currencies = ["֏","$","€","₽","£"]
 
     var total: (perPerson: Float, grandTotal: Float) {
         let peopleCount = Float(numberOfPeople) ?? 0
@@ -39,6 +41,13 @@ struct ContentView: View {
                 Section {
                     TextField("check amount", text: $checkAmount)
                         .keyboardType(.decimalPad)
+                    
+                    Picker("currency", selection: $currency){
+                        ForEach(0 ..< currencies.count){
+                            Text("\(self.currencies[$0])")
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
 
                     TextField("number of people", text: $numberOfPeople)
                         .keyboardType(.numberPad)
@@ -55,11 +64,11 @@ struct ContentView: View {
                 }
 
                 Section(header: Text("per person")) {
-                    Text("$\(total.perPerson, specifier: "%.2f")")
+                    Text("\(currencies[currency])\(total.perPerson, specifier: "%.2f")")
                 }
 
                 Section(header: Text("total with tips")) {
-                    Text("$\(total.grandTotal, specifier: "%.2f")")
+                    Text("\(currencies[currency])\(total.grandTotal, specifier: "%.2f")")
                 }
             }
             .navigationTitle("WeSplit")
